@@ -1,12 +1,17 @@
 package com.cikoapps.rigatransport;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.TextView;
+
+import static com.cikoapps.rigatransport.R.*;
 
 /**
  * Created by arvis on 15.19.1.
@@ -33,24 +38,39 @@ public class ImageAdapter extends BaseAdapter {
 
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
-        ImageView imageView;
-        if (convertView == null) {
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(245, 245));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
-        } else {
-            imageView = (ImageView) convertView;
-        }
 
-        imageView.setImageResource(mThumbIds[position]);
-        return imageView;
+        View grid;
+        LayoutInflater inflater = (LayoutInflater) mContext
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (convertView == null) {
+            grid = new View(mContext);
+            grid = inflater.inflate(layout.categorie_view, null);
+            TextView textView = (TextView) grid.findViewById(id.grid_image_text);
+            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+            textView.setText(mThumbIdsTitles[position]);
+            imageView.setImageResource(mThumbIds[position]);
+        } else {
+            grid = (View) convertView;
+        }
+        return grid;
+
     }
 
     // Keep all Images in array
-    public Integer[] mThumbIds = {
-            R.drawable.ic_launcher, R.drawable.ic_launcher,
-            R.drawable.ic_launcher, R.drawable.ic_launcher,
-            R.drawable.ic_launcher, R.drawable.ic_launcher
+    public static Integer[] mThumbIds = {
+            R.drawable.tram, R.drawable.trolley,
+            R.drawable.bus, R.drawable.nightbus,
+            R.drawable.minibus, R.drawable.favorites
     };
+    public static String[] mThumbIdsTitles = {
+            "Tram","Trolley","Bus","MiniBus","NightBus","Favorites"
+    };
+
+    public static int getTitlesIndex(String text) {
+
+        for(int i=0; i < mThumbIdsTitles.length;i++){
+            if(text.equalsIgnoreCase(mThumbIdsTitles[i])) return i;
+        }
+        return -1;
+    }
 }

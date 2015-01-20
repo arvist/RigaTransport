@@ -34,13 +34,10 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         ProgressDialog progress = new ProgressDialog(this);
         progress.setTitle("Loading");
         progress.setMessage("Wait while loading...");
         progress.show();
-
-
         setContentView(R.layout.activity_main);
         createDB();
     }
@@ -58,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     //http://www.codeproject.com/Articles/119293/Using-SQLite-Database-with-Android
@@ -66,23 +62,23 @@ public class MainActivity extends ActionBarActivity {
     public void createDB() {
         try{
             transportDB = this.openOrCreateDatabase("Transport", MODE_PRIVATE, null);
+            //transportDB.execSQL("DROP TABLE categories;");
             transportDB.execSQL("CREATE TABLE IF NOT EXISTS categories " +
                     "(id integer primary key, title text);");
             File database = getApplicationContext().getDatabasePath("Transport");
             if(database.exists()){
                 Cursor cursor = transportDB.rawQuery("SELECT * FROM categories", null);
+                Log.w("TEST",cursor.getCount()+"   <-------------");
                 if(cursor != null && (cursor.getCount() > 4)) {
-
                         //Toast.makeText(this,"Using db from memory", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     new DownloadDatabase().execute();
                 }
             }
-            else{
+            else {
                 Toast.makeText(this, "Database failure", Toast.LENGTH_LONG).show();
             }
-
             Intent categoriesIntent = new Intent(this, CategoriesActivity.class);
             startActivity(categoriesIntent);
         }
@@ -95,19 +91,15 @@ public class MainActivity extends ActionBarActivity {
         Private class to download categories of public transportation
      */
     private class DownloadDatabase  extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             Cursor cursor = transportDB.rawQuery("SELECT * FROM categories", null);
             int idColumn = cursor.getColumnIndex("id");
             int titleColumn = cursor.getColumnIndex("title");
             cursor.moveToFirst();
             String allCategories = "";
-
             if(cursor != null && (cursor.getCount() > 0)){
-
                 do{
                     String id = cursor.getString(idColumn);
                     String title = cursor.getString(titleColumn);
@@ -118,8 +110,6 @@ public class MainActivity extends ActionBarActivity {
             else {
                 Toast.makeText(getApplicationContext(),"No Results To Show",Toast.LENGTH_SHORT).show();
             }
-
-
         }
 
         @Override
@@ -139,10 +129,8 @@ public class MainActivity extends ActionBarActivity {
                     transportDB.execSQL(line);
                     sb.append(line);
                 }
-
                 insertCategories = sb.toString();
                Log.w("DOWNLOAD FINISHED", insertCategories);
-
             }
             catch (ClientProtocolException e) {
                 e.printStackTrace(); }
