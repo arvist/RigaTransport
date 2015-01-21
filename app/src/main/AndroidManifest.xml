@@ -21,6 +21,15 @@
             android:name=".CategoriesActivity"
             android:label="RigaTransport" >
         </activity>
+        <activity
+            android:name=".FavoritesActivity"
+            android:label="RigaTransport" >
+        </activity>
+        <activity
+            android:name=".RouteListActivity"
+            android:label="RigaTransport" >
+        </activity>
+
 
     </application>
 
