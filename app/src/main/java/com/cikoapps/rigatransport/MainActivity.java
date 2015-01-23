@@ -39,7 +39,9 @@ public class MainActivity extends ActionBarActivity {
         progress.setMessage("Wait while loading...");
         progress.show();
         setContentView(R.layout.activity_main);
-        createDB();
+        //createDB();
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
+        dataBaseHelper.checkForData();
     }
 
     @Override
@@ -59,9 +61,10 @@ public class MainActivity extends ActionBarActivity {
     }
     //http://www.codeproject.com/Articles/119293/Using-SQLite-Database-with-Android
 
-    public void createDB() {
+   /* public void createDB() {
         try{
-            transportDB = this.openOrCreateDatabase("Transport", MODE_PRIVATE, null);
+            DataBaseCreator.CreateFromRawDbFiles(getApplicationContext());
+            *//*transportDB = this.openOrCreateDatabase("Transport", MODE_PRIVATE, null);
             //transportDB.execSQL("DROP TABLE categories;");
             transportDB.execSQL("CREATE TABLE IF NOT EXISTS categories " +
                     "(id integer primary key, title text);");
@@ -84,8 +87,12 @@ public class MainActivity extends ActionBarActivity {
         }
         catch (Exception e){
             e.printStackTrace();
+        }*//*
+    } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
+        Log.w("GOT PAST","GOT PAST");
+    }*/
 
     /*
         Private class to download categories of public transportation
