@@ -39,21 +39,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         this.myContext = context;
     }
 
-    public void checkForData() {
+    public boolean checkForData() {
         boolean isDataPresent = checkDataBase();
         if (isDataPresent) {
             openDataBase();
             Cursor cursor = myDataBase.rawQuery("SELECT * FROM routes", null);
-            close();
+
             if (cursor.getCount() < 100) {
                 try {
                     createDataBase();
                     Log.d(LOG_DB, "Data missing from database");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return false;
                 }
             }
-            Log.d(LOG_DB,"Database valid");
+            Log.d(LOG_DB, "Database valid");
         } else {
             try {
                 Log.d(LOG_DB, "Database do not exist");
@@ -61,9 +62,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                return false;
             }
         }
+        close();
+        return true;
     }
+
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      */
@@ -161,6 +166,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+    public Cursor getTransportListQuery(int id) {
+        /*
+            id = 1 Bus
+            id = 2 Tram
+            id = 3 Trolley
+         */
+        openDataBase();
+        return myDataBase.rawQuery("Select * from routes where type = " + id + " and reverse = 'false';", null);
 
     }
 

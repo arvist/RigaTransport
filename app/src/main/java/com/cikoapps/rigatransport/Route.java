@@ -6,22 +6,37 @@ package com.cikoapps.rigatransport;
 public class Route {
 
 
-    String start;
-    String end;
+    String name;
     int number;
+    int id;
+    int type;
 
-    public Route(String start, String end, int number){
-        this.start=start;
-        this.end = end;
+
+    public Route(String name, int number, int id, int type) {
+        this.name = name;
         this.number = number;
+        this.id = id;
+        this.type = type;
     }
-    public String getStart() {
-        return this.start;
+
+    public String getName() {
+        return name;
+
     }
-    public String getEnd(){
-        return this.end;
+
+    public int getNumber() {
+        return number;
+
     }
-    public int getNumber(){
-        return this.number;
+
+    public int getId() {
+        return id;
+
     }
+
+    public int getType() {
+        return type;
+    }
+
+
 }

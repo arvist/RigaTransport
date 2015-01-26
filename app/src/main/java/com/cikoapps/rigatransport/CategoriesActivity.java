@@ -3,6 +3,7 @@ package com.cikoapps.rigatransport;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -26,14 +27,21 @@ public class CategoriesActivity extends ActionBarActivity {
 
     public void onGridElementClick(View view) {
         TextView textView = (TextView) view.findViewById(R.id.grid_image_text);
+
         String selectedCategoryName = textView.getText().toString();
-        Toast.makeText(getApplicationContext(), selectedCategoryName, Toast.LENGTH_SHORT).show();
-        if(selectedCategoryName.equalsIgnoreCase("favorites")){
-            Intent favoritesActivity = new Intent(this, FavoritesActivity.class);
+        int transport_type = 1 + ImageAdapter.getTitlesIndex(selectedCategoryName);
+
+        //Toast.makeText(getApplicationContext(), selectedCategoryName + " " + transport_type, Toast.LENGTH_SHORT).show();
+
+        if (selectedCategoryName.equalsIgnoreCase("favorites")) {
+            Intent favoritesActivity = new Intent(CategoriesActivity.this, FavoritesActivity.class);
+
+
             startActivity(favoritesActivity);
-        }
-        else {
+        } else {
+            //Intent routeListActivity = new Intent(this, RouteListActivity.class);
             Intent routeListActivity = new Intent(this, RouteListActivity.class);
+            routeListActivity.putExtra("transport_type", transport_type);
             startActivity(routeListActivity);
         }
     }

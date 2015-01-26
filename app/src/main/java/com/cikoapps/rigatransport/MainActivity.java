@@ -39,9 +39,11 @@ public class MainActivity extends ActionBarActivity {
         progress.setMessage("Wait while loading...");
         progress.show();
         setContentView(R.layout.activity_main);
-        //createDB();
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-        dataBaseHelper.checkForData();
+        if (dataBaseHelper.checkForData()) {
+            Intent categoriesIntent = new Intent(this, CategoriesActivity.class);
+            startActivity(categoriesIntent);
+        }
     }
 
     @Override
@@ -97,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
     /*
         Private class to download categories of public transportation
      */
-    private class DownloadDatabase  extends AsyncTask<Void, Void, Void> {
+    private class DownloadDatabase extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
@@ -106,16 +108,15 @@ public class MainActivity extends ActionBarActivity {
             int titleColumn = cursor.getColumnIndex("title");
             cursor.moveToFirst();
             String allCategories = "";
-            if(cursor != null && (cursor.getCount() > 0)){
-                do{
+            if (cursor != null && (cursor.getCount() > 0)) {
+                do {
                     String id = cursor.getString(idColumn);
                     String title = cursor.getString(titleColumn);
                     allCategories += id + " - " + title + "\n";
-                } while(cursor.moveToNext());
+                } while (cursor.moveToNext());
                 Toast.makeText(getApplicationContext(), allCategories, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(),"No Results To Show",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "No Results To Show", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -125,23 +126,22 @@ public class MainActivity extends ActionBarActivity {
             HttpPost httpPost = new HttpPost("http://cikoapps.com/test.txt");
             httpPost.setHeader("Content-type", "text/plain");
             InputStream inputStream = null;
-            try{
+            try {
                 HttpResponse httpResponse = jsonDownloadClient.execute(httpPost);
                 HttpEntity httpEntity = httpResponse.getEntity();
                 inputStream = httpEntity.getContent();
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"),8);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
                 StringBuilder sb = new StringBuilder();
                 String line = null;
-                while((line     = bufferedReader.readLine()) != null) {
+                while ((line = bufferedReader.readLine()) != null) {
                     transportDB.execSQL(line);
                     sb.append(line);
                 }
                 insertCategories = sb.toString();
-               Log.w("DOWNLOAD FINISHED", insertCategories);
-            }
-            catch (ClientProtocolException e) {
-                e.printStackTrace(); }
-            catch (IOException e) {
+                Log.w("DOWNLOAD FINISHED", insertCategories);
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;

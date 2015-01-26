@@ -46,7 +46,7 @@ public class ImageAdapter extends BaseAdapter {
             grid = new View(mContext);
             grid = inflater.inflate(layout.categorie_view, null);
             TextView textView = (TextView) grid.findViewById(id.grid_image_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+            ImageView imageView = (ImageView) grid.findViewById(R.id.grid_image);
             textView.setText(mThumbIdsTitles[position]);
             imageView.setImageResource(mThumbIds[position]);
         } else {
@@ -58,18 +58,19 @@ public class ImageAdapter extends BaseAdapter {
 
     // Keep all Images in array
     public static Integer[] mThumbIds = {
-            R.drawable.tram, R.drawable.trolley,
-            R.drawable.bus, R.drawable.nightbus,
-            R.drawable.minibus, R.drawable.favorites
+            R.drawable.bus,
+            R.drawable.tram,
+            R.drawable.trolley,
+            R.drawable.favorites
     };
     public static String[] mThumbIdsTitles = {
-            "Tram","Trolley","Bus","MiniBus","NightBus","Favorites"
+            "Bus", "Tram", "Trolley", "Favorites"
     };
 
     public static int getTitlesIndex(String text) {
 
-        for(int i=0; i < mThumbIdsTitles.length;i++){
-            if(text.equalsIgnoreCase(mThumbIdsTitles[i])) return i;
+        for (int i = 0; i < mThumbIdsTitles.length; i++) {
+            if (text.equalsIgnoreCase(mThumbIdsTitles[i])) return i;
         }
         return -1;
     }
