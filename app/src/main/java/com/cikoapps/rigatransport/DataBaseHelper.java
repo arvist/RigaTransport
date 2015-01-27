@@ -65,7 +65,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 return false;
             }
         }
-        close();
+        //close();
         return true;
     }
 
@@ -176,10 +176,36 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             id = 3 Trolley
          */
         openDataBase();
-        return myDataBase.rawQuery("Select * from routes where type = " + id + " and reverse = 'false';", null);
+        Cursor cursor = myDataBase.rawQuery("Select * from routes where type = " + id + " and reverse = 'false';", null);
+        //close();
+        return cursor;
 
     }
 
+
+    public Cursor getAllRouteStopsPositionsByRouteId(int route_id) {
+        /*
+            route_id - id of Route from Routes table
+            transport_type = 1 - Bus, 2 - Tram, 3 - Trolley
+        */
+        openDataBase();
+        Cursor cursor = myDataBase.rawQuery("Select stop.lat, stop.lng, stop.name, stop._id from stop where stop.routeId=" + route_id + " order by _id ASC;", null);
+        //close();
+        return cursor;
+    }
+
+    public int getRouteIntByTransportTypeAndNum(int transport_type, int num) {
+        openDataBase();
+        int _id = -1;
+        Cursor cursor = myDataBase.rawQuery("Select routes._id from Routes where routes.type = " + transport_type
+                + " and routes.number = " + num + " order by routes._id ASC limit 1;", null);
+        if (cursor.moveToFirst()) {
+            do {
+                _id = cursor.getInt(cursor.getColumnIndex("_id"));
+            } while (cursor.moveToNext());
+        }
+        return _id;
+    }
 
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy

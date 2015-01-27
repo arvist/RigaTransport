@@ -32,5 +32,7 @@
         android:layout_weight="1"
         android:padding="8dp"
         android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/google_maps" />
+        android:id="@+id/google_maps"
+        android:tag=""
+        android:onClick="testMapClick" />
 </LinearLayout>

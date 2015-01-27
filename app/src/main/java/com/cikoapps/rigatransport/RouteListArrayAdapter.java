@@ -18,37 +18,38 @@ import java.util.ArrayList;
 public class RouteListArrayAdapter extends ArrayAdapter<Route> {
     Context myContext;
 
-        public RouteListArrayAdapter(Context context, ArrayList<Route> values) {
-            super(context, R.layout.route_row_layout,values);
-            myContext = context;
+    public RouteListArrayAdapter(Context context, ArrayList<Route> values) {
+        super(context, R.layout.route_row_layout, values);
+        myContext = context;
 
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater theInflater = LayoutInflater.from(getContext());
-
-            Route route =  getItem(position);
-
-            View theView = theInflater.inflate(R.layout.route_row_layout, parent, false);
-
-            TextView routeNumTextView = (TextView) theView.findViewById(R.id.route_num);
-
-            TextView stopNameTextView = (TextView) theView.findViewById(R.id.stop_name);
-
-            ImageView googleMapsImage = (ImageView) theView.findViewById(R.id.google_maps);
-
-            Typeface font = Typeface.createFromAsset(myContext.getAssets(), "NotoSerif-Regular.ttf");
-            stopNameTextView.setTypeface(font);
-            stopNameTextView.setText(route.getName());
-
-            googleMapsImage.setImageResource(R.drawable.map);
-
-            routeNumTextView.setTypeface(font);
-            routeNumTextView.setText(route.getNumber() + "");
-
-            return theView;
-        }
     }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater theInflater = LayoutInflater.from(getContext());
+
+        Route route = getItem(position);
+
+        View theView = theInflater.inflate(R.layout.route_row_layout, parent, false);
+
+        TextView routeNumTextView = (TextView) theView.findViewById(R.id.route_num);
+
+        TextView stopNameTextView = (TextView) theView.findViewById(R.id.stop_name);
+
+        ImageView googleMapsImage = (ImageView) theView.findViewById(R.id.google_maps);
+
+        Typeface font = Typeface.createFromAsset(myContext.getAssets(), "NotoSerif-Regular.ttf");
+        stopNameTextView.setTypeface(font);
+        stopNameTextView.setText(route.getName());
+
+        googleMapsImage.setImageResource(R.drawable.map);
+        googleMapsImage.setTag(route.getNumber());
+
+        routeNumTextView.setTypeface(font);
+        routeNumTextView.setText(route.getNumber() + "");
+
+        return theView;
+    }
+}
 
 
