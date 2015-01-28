@@ -42,7 +42,7 @@ public class StopListArrayAdapter extends ArrayAdapter<Stop> {
         stopNameView.setTypeface(font);
         stopNameView.setText(stop.getName());
         stopMapImageView.setImageResource(R.drawable.map);
-
+        stopMapImageView.setTag(position);
         int count = getCount();
         if (position == 0) {
             stopImageView.setImageResource(R.drawable.start);

@@ -212,6 +212,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return _id;
     }
 
+    public int getStopIdByTransportTypeAndNum(int transport_type, int num) {
+        openDataBase();
+        int _id = -1;
+        Cursor cursor = myDataBase.rawQuery("Select stop._id from stop where stop.type = " + transport_type
+                + " and routes.number = " + num + " order by routes._id ASC limit 1;", null);
+        if (cursor.moveToFirst()) {
+            do {
+                _id = cursor.getInt(cursor.getColumnIndex("_id"));
+            } while (cursor.moveToNext());
+        }
+        return _id;
+    }
+
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.

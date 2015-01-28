@@ -1,6 +1,7 @@
 package com.cikoapps.rigatransport;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -39,7 +42,10 @@ public class StopListActivity extends ActionBarActivity {
                     do {
 
                         String name = cursor.getString(cursor.getColumnIndex("name"));
-                        Stop stop = new Stop(name);
+                        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                        double lat = cursor.getDouble(cursor.getColumnIndex("lat"));
+                        double lng = cursor.getDouble(cursor.getColumnIndex("lng"));
+                        Stop stop = new Stop(name, id, lat, lng);
                         ArrayListParameters.add(stop);
                     } while (cursor.moveToNext());
                 }
@@ -58,5 +64,24 @@ public class StopListActivity extends ActionBarActivity {
     @Override
     public View onCreateView(String name, @NonNull Context context, @NonNull AttributeSet attrs) {
         return super.onCreateView(name, context, attrs);
+    }
+
+    public void onStopMapClick(View view) {
+            Cursor cursor = null;
+
+
+            int position = Integer.parseInt(view.getTag().toString());
+            Stop stop = ArrayListParameters.get(position);
+            ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
+            latLngArrayList.add(stop.getLatLng());
+            ArrayList<String> namesArrayList = new ArrayList<String>();
+            namesArrayList.add(stop.getName());
+
+            Intent intent = new Intent(StopListActivity.this, Stop_Map_Activity.class);
+            intent.putExtra("flagArrayList", latLngArrayList);
+            intent.putExtra("names", namesArrayList);
+
+            startActivity(intent);
+
     }
 }

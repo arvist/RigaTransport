@@ -29,6 +29,7 @@
         android:layout_weight="1"
         android:padding="4dp"
         android:gravity="center_vertical|center_horizontal"
-        android:id="@+id/stop_map_image" />
+        android:id="@+id/stop_map_image"
+        android:onClick="onStopMapClick"/>
 
 </LinearLayout>

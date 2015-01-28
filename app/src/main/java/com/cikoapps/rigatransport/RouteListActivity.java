@@ -96,10 +96,6 @@ public class RouteListActivity extends ActionBarActivity {
         Intent intent = new Intent(RouteListActivity.this, Stop_Map_Activity.class);
         intent.putExtra("flagArrayList", flagArrayList);
         intent.putExtra("names", names);
-
-        intent.putExtra("stop_name", "TEST_STOP");
-        intent.putExtra("lng", 56.9791332184784);
-        intent.putExtra("lat", 24.1860095389812);
         startActivity(intent);
     }
 
