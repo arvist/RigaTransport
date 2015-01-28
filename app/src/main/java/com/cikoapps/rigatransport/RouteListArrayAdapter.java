@@ -24,6 +24,7 @@ public class RouteListArrayAdapter extends ArrayAdapter<Route> {
 
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater theInflater = LayoutInflater.from(getContext());
@@ -34,22 +35,26 @@ public class RouteListArrayAdapter extends ArrayAdapter<Route> {
 
         TextView routeNumTextView = (TextView) theView.findViewById(R.id.route_num);
 
-        TextView stopNameTextView = (TextView) theView.findViewById(R.id.stop_name);
+        TextView stopNameTextView = (TextView) theView.findViewById(R.id.route_name);
 
         ImageView googleMapsImage = (ImageView) theView.findViewById(R.id.google_maps);
 
         Typeface font = Typeface.createFromAsset(myContext.getAssets(), "NotoSerif-Regular.ttf");
         stopNameTextView.setTypeface(font);
         stopNameTextView.setText(route.getName());
+        stopNameTextView.setTag(route.getNumber());
 
         googleMapsImage.setImageResource(R.drawable.map);
+        googleMapsImage.setTag(route.getNumber());
         googleMapsImage.setTag(route.getNumber());
 
         routeNumTextView.setTypeface(font);
         routeNumTextView.setText(route.getNumber() + "");
 
+
         return theView;
     }
+
 }
 
 

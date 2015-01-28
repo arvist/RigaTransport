@@ -182,6 +182,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public Cursor getAllRouteStopsByRouteId(int route_id) {
+        openDataBase();
+        Cursor cursor = myDataBase.rawQuery("select * from stop where stop.routeId = " + route_id + " order by stop._id", null);
+        return cursor;
+    }
 
     public Cursor getAllRouteStopsPositionsByRouteId(int route_id) {
         /*

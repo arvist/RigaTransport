@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="72dp"
     android:orientation="horizontal"
+    android:onClick="onRouteClick"
 
 
     >
@@ -14,7 +15,8 @@
         android:layout_weight="1"
         android:padding="8dp"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:tag="" />
 
     <TextView
         android:paddingLeft="0dp"
@@ -24,11 +26,12 @@
         android:layout_weight="5"
         android:gravity="center_horizontal"
         android:textSize="16sp"
-        android:id="@+id/stop_name" />
+        android:id="@+id/route_name"
+        android:tag="" />
 
     <ImageView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="72dp"
         android:layout_weight="1"
         android:padding="8dp"
         android:gravity="center_vertical|center_horizontal"

@@ -1,5 +1,7 @@
 package com.cikoapps.rigatransport;
 
+import android.app.ActionBar;
+import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -98,6 +100,16 @@ public class RouteListActivity extends ActionBarActivity {
         intent.putExtra("stop_name", "TEST_STOP");
         intent.putExtra("lng", 56.9791332184784);
         intent.putExtra("lat", 24.1860095389812);
+        startActivity(intent);
+    }
+
+    public void onRouteClick(View view) {
+
+        int routeNum = Integer.parseInt((view.findViewById(R.id.google_maps)).getTag().toString());
+
+        Intent intent = new Intent(RouteListActivity.this, StopListActivity.class);
+        intent.putExtra("transport_type", transportType);
+        intent.putExtra("route_num", routeNum);
         startActivity(intent);
     }
 }
