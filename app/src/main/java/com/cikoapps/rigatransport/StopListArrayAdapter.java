@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class StopListArrayAdapter extends ArrayAdapter<Stop> {
     Context myContext;
 
+
     public StopListArrayAdapter(Context context, ArrayList<Stop> values) {
         super(context, R.layout.stop_row_layout, values);
         myContext = context;

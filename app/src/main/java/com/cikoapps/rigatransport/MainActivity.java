@@ -40,7 +40,9 @@ public class MainActivity extends ActionBarActivity {
         progress.show();
         setContentView(R.layout.activity_main);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-        if (dataBaseHelper.checkForData()) {
+        UserDataBaseHelper userDataBaseHelper = new UserDataBaseHelper(getApplicationContext());
+        if (dataBaseHelper.checkForData() && userDataBaseHelper.checkForData()) {
+
             Intent categoriesIntent = new Intent(this, CategoriesActivity.class);
             startActivity(categoriesIntent);
         }

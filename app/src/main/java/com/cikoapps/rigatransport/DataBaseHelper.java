@@ -212,6 +212,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return _id;
     }
 
+
     public int getStopIdByTransportTypeAndNum(int transport_type, int num) {
         openDataBase();
         int _id = -1;
