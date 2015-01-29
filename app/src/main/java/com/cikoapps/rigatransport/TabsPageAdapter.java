@@ -2,7 +2,6 @@ package com.cikoapps.rigatransport;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
@@ -21,10 +20,10 @@ public class TabsPageAdapter extends FragmentStatePagerAdapter {
         switch (index) {
             case 0:
                 // Top Rated fragment activity
-                return new FavoriteRoutesTab();
+                return new FavoriteStopsTab();
             case 1:
                 // Games fragment activity
-                return new FavoriteStopsTab();
+                return new FavoriteRoutesTab();
             case 2:
 
         }
@@ -37,6 +36,7 @@ public class TabsPageAdapter extends FragmentStatePagerAdapter {
         // get item count - equal to number of tabs
         return 2;
     }
+
 
 
 }

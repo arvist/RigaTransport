@@ -5,14 +5,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.ListView;
 
 /**
  * Created by arvis.taurenis on 1/21/2015.
@@ -24,7 +27,7 @@ public class FavoritesActivity extends FragmentActivity implements
     private TabsPageAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Top Rated", "Games"};
+    private String[] tabs = {"Favorite Stops", "Favorite Routes"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +81,14 @@ public class FavoritesActivity extends FragmentActivity implements
         // on tab selected
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
+        ListView listView = (ListView) findViewById(R.id.route_list);
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
+
+
+
 
 }

@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -55,8 +56,26 @@ public class RouteListActivity extends ActionBarActivity {
             }
             setContentView(R.layout.route_list_layout);
             ListAdapter theAdapter = new RouteListArrayAdapter(this, ArrayListParameters);
-            ListView theListView = (ListView) findViewById(R.id.route_list);
+            final ListView theListView = (ListView) findViewById(R.id.route_list);
             theListView.setAdapter(theAdapter);
+
+            theListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view,
+                                        int position, long id) {
+
+                    Route o =(Route) theListView.getItemAtPosition(position);
+                    //prestationEco str=(prestationEco)o;//As you are using Default String Adapter
+                    Toast.makeText(getBaseContext(),o.getName(),Toast.LENGTH_SHORT).show();
+                    int routeNum = Integer.parseInt((view.findViewById(R.id.route_map)).getTag().toString());
+
+                    Intent intent = new Intent(RouteListActivity.this, StopListActivity.class);
+
+                    intent.putExtra("transport_type", transportType);
+                    intent.putExtra("route_num", routeNum);
+                    startActivity(intent);
+                }
+            });
+
             dataBaseHelper.close();
         }
     }
@@ -66,7 +85,7 @@ public class RouteListActivity extends ActionBarActivity {
         return super.onCreateView(name, context, attrs);
     }
 
-    public void testMapClick(View view) {
+   /* public void testMapClick(View view) {
         Cursor cursor = null;
         ArrayList<LatLng> flagArrayList = new ArrayList<LatLng>();
         ArrayList<String> names = new ArrayList<String>();
@@ -97,9 +116,9 @@ public class RouteListActivity extends ActionBarActivity {
         intent.putExtra("flagArrayList", flagArrayList);
         intent.putExtra("names", names);
         startActivity(intent);
-    }
+    }*/
 
-    public void onRouteClick(View view) {
+    /*public void onRouteClick(View view) {
 
         int routeNum = Integer.parseInt((view.findViewById(R.id.google_maps)).getTag().toString());
 
@@ -107,5 +126,5 @@ public class RouteListActivity extends ActionBarActivity {
         intent.putExtra("transport_type", transportType);
         intent.putExtra("route_num", routeNum);
         startActivity(intent);
-    }
+    }*/
 }

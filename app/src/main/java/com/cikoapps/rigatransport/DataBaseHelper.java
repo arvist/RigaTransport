@@ -226,6 +226,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return _id;
     }
 
+    public Cursor getFavoriteRoutes(int[] ids) {
+        openDataBase();
+        StringBuilder sb = new StringBuilder();
+        String query = "Select * from routes where ";
+        sb.append(query);
+        for(int i=0; i<ids.length; i++){
+            sb.append("routes._id = " + ids[i] + " or ");
+        }
+        sb.trimToSize();
+        String temp = (sb.substring(0, sb.length() -3 )) + ";";
+        sb.append(";");
+        String selectAllQuery = sb.toString();
+        Cursor cursor = myDataBase.rawQuery(temp,null);
+        return cursor;
+
+    }
+
     // Add your public helper methods to access and get content from the database.
     // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
     // to you to create adapters for your views.

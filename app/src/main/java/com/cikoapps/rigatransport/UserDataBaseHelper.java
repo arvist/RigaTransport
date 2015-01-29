@@ -138,4 +138,20 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         myDataBase.execSQL("Delete from favorite_routes where route_id = " + route_id + ";");
 
     }
+    public int[] getRouteFavoriteIds(){
+        openDataBase();
+        int[] returnArray = null;
+        Cursor cursor = myDataBase.rawQuery("Select * from favorite_routes", null);
+        returnArray = new int[cursor.getCount()];
+        int position = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                int _id = cursor.getInt(cursor.getColumnIndex("route_id"));
+                Log.w(LOG_DB, "ALL_ID ->" + _id);
+                returnArray[position] = _id;
+                position++;
+            } while (cursor.moveToNext());
+        }
+        return returnArray;
+    }
 }
