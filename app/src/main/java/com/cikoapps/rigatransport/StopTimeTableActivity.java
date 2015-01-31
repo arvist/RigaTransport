@@ -1,34 +1,31 @@
 package com.cikoapps.rigatransport;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Created by arvis.taurenis on 1/21/2015.
+ * Created by arvis.taurenis on 1/30/2015.
  */
 @SuppressWarnings("ALL")
-public class FavoritesActivity extends FragmentActivity implements
+public class StopTimeTableActivity extends FragmentActivity implements
         ActionBar.TabListener {
 
     private ViewPager viewPager;
-    private TabsPageAdapter mAdapter;
+    private FavePageAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Favorite Stops", "Favorite Routes"};
+    private String[] tabs = {"Weekdays", "Weekends"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +36,7 @@ public class FavoritesActivity extends FragmentActivity implements
         // Initilization
         viewPager = (ViewPager) findViewById(R.id.pager);
         actionBar = getActionBar();
-        mAdapter = new TabsPageAdapter(getSupportFragmentManager());
+        mAdapter = new FavePageAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
@@ -49,6 +46,13 @@ public class FavoritesActivity extends FragmentActivity implements
         for (String tab_name : tabs) {
             actionBar.addTab(actionBar.newTab().setText(tab_name)
                     .setTabListener(this));
+        }
+        Calendar calendar = Calendar.getInstance();
+        int day_of_week = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day_of_week == Calendar.SATURDAY || day_of_week == Calendar.SUNDAY) {
+            actionBar.setSelectedNavigationItem(1);
+        } else {
+            actionBar.setSelectedNavigationItem(0);
         }
 
         /**
@@ -82,12 +86,9 @@ public class FavoritesActivity extends FragmentActivity implements
         // on tab selected
         // show respected fragment view
         viewPager.setCurrentItem(tab.getPosition());
-        ListView listView = (ListView) findViewById(R.id.route_list);
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
     }
-
-
 }

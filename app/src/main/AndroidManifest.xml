@@ -57,6 +57,10 @@
         <activity
             android:name=".StopListActivity"
             android:label="RigaTransport"></activity>
+        <activity
+            android:name=".StopTimeTableActivity"
+            android:label="RigaTransport"
+            android:theme="@style/Widget.AppCompat.Light.ActionBar"></activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

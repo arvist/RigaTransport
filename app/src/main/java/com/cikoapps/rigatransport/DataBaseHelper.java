@@ -212,6 +212,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return _id;
     }
 
+    public int getRouteIntByTransportTypeAndNumRev(int transport_type, int num) {
+        openDataBase();
+        int _id = -1;
+        Cursor cursor = myDataBase.rawQuery("Select routes._id from Routes where routes.type = " + transport_type
+                + " and routes.number = " + num + " order by routes._id DESC limit 1;", null);
+        if (cursor.moveToFirst()) {
+            do {
+                _id = cursor.getInt(cursor.getColumnIndex("_id"));
+            } while (cursor.moveToNext());
+        }
+        return _id;
+    }
+
 
     public int getStopIdByTransportTypeAndNum(int transport_type, int num) {
         openDataBase();
@@ -225,6 +238,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
         return _id;
     }
+
 
     public Cursor getFavoriteRoutes(int[] ids) {
         openDataBase();
@@ -240,6 +254,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String selectAllQuery = sb.toString();
         Cursor cursor = myDataBase.rawQuery(temp,null);
         return cursor;
+
+    }
+
+    public Cursor getWeekDayTimesByStopId(int id) {
+        openDataBase();
+        String query = "select * from timesWeekDays where stopid = " + id + ";";
+        return myDataBase.rawQuery(query, null);
+    }
+
+    public Cursor getWeekEndTimesByStopId(int id) {
+        openDataBase();
+        String query = "select * from timesWeekEnds where stopid = " + id + ";";
+        return myDataBase.rawQuery(query, null);
 
     }
 

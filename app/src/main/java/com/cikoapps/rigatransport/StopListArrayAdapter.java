@@ -1,12 +1,17 @@
 package com.cikoapps.rigatransport;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -27,11 +32,11 @@ public class StopListArrayAdapter extends ArrayAdapter<Stop> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
 
-        LayoutInflater theInflater = LayoutInflater.from(getContext());
+        final LayoutInflater theInflater = LayoutInflater.from(getContext());
 
-        Stop stop = getItem(position);
+        final Stop stop = getItem(position);
 
         View theView = theInflater.inflate(R.layout.stop_row_layout, parent, false);
 
@@ -43,6 +48,7 @@ public class StopListArrayAdapter extends ArrayAdapter<Stop> {
         stopNameView.setTypeface(font);
         stopNameView.setText(stop.getName());
         stopMapImageView.setImageResource(R.drawable.map);
+
         stopMapImageView.setTag(position);
         int count = getCount();
         if (position == 0) {
@@ -52,6 +58,31 @@ public class StopListArrayAdapter extends ArrayAdapter<Stop> {
         } else {
             stopImageView.setImageResource(R.drawable.middle);
         }
+
+
+        // theView.setTag(stop.getId());
+
+
+        theView.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+               /* SharedPreferences prefs  = myContext.getSharedPreferences("RigaTransport", myContext.MODE_PRIVATE);
+                int direction = prefs.getInt("dir",-1);*/
+
+
+                LinearLayout stopListLayout = (LinearLayout) theInflater.inflate(R.layout.stop_list_layout, parent, false);
+                ListView stopListView = (ListView) stopListLayout.findViewById(R.id.stop_list);
+
+
+                Intent intent = new Intent(getContext(), StopTimeTableActivity.class);
+                intent.putExtra("stop_id", stop.getId());
+                //intent.putExtra("direction",direction);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getContext().startActivity(intent);
+            }
+        });
+
 
         return theView;
     }

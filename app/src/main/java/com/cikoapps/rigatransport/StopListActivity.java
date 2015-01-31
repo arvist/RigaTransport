@@ -2,6 +2,7 @@ package com.cikoapps.rigatransport;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,10 +30,12 @@ public class StopListActivity extends ActionBarActivity {
     int transport_type = -1;
     int route_num = -1;
     int route_id = -1;
+    int direction = 0;
     Bundle savedInstance = null;
     Bundle transportBundle = null;
     UserDataBaseHelper userDataBaseHelper;
     Menu menu;
+    SharedPreferences.Editor editor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +66,24 @@ public class StopListActivity extends ActionBarActivity {
             }
 
 
-            setContentView(R.layout.route_list_layout);
+            /*editor = getSharedPreferences("RigaTransport", MODE_PRIVATE).edit();
+            editor.putInt("dir", direction);
+            editor.commit();*/
+
+
+            setContentView(R.layout.stop_list_layout);
+
+
             ListAdapter theAdapter;
             theAdapter = new StopListArrayAdapter(this, ArrayListParameters);
-            ListView theListView = (ListView) findViewById(R.id.route_list);
+            ListView theListView = (ListView) findViewById(R.id.stop_list);
+
             theListView.setAdapter(theAdapter);
             dataBaseHelper.close();
 
             userDataBaseHelper = new UserDataBaseHelper(getApplicationContext());
+
+
         }
 
     }
@@ -81,21 +94,21 @@ public class StopListActivity extends ActionBarActivity {
     }
 
     public void onStopMapClick(View view) {
-            Cursor cursor = null;
+        Cursor cursor = null;
 
 
-            int position = Integer.parseInt(view.getTag().toString());
-            Stop stop = ArrayListParameters.get(position);
-            ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
-            latLngArrayList.add(stop.getLatLng());
-            ArrayList<String> namesArrayList = new ArrayList<String>();
-            namesArrayList.add(stop.getName());
+        int position = Integer.parseInt(view.getTag().toString());
+        Stop stop = ArrayListParameters.get(position);
+        ArrayList<LatLng> latLngArrayList = new ArrayList<LatLng>();
+        latLngArrayList.add(stop.getLatLng());
+        ArrayList<String> namesArrayList = new ArrayList<String>();
+        namesArrayList.add(stop.getName());
 
-            Intent intent = new Intent(StopListActivity.this, Stop_Map_Activity.class);
-            intent.putExtra("flagArrayList", latLngArrayList);
-            intent.putExtra("names", namesArrayList);
+        Intent intent = new Intent(StopListActivity.this, Stop_Map_Activity.class);
+        intent.putExtra("flagArrayList", latLngArrayList);
+        intent.putExtra("names", namesArrayList);
 
-            startActivity(intent);
+        startActivity(intent);
 
     }
 
@@ -140,12 +153,69 @@ public class StopListActivity extends ActionBarActivity {
         }
     }
 
-    private void switch_directions() {
+    /*private void switch_directions() {
+        if( direction==0) direction = 1;
+
+        else direction = 0;
+
+        Log.w("DIRECTION " ,direction +"");
+        editor.remove("dir");
+        editor.putInt("dir", direction);
+        editor.commit();
+
+
         ListAdapter theAdapter;
         theAdapter = new StopListArrayAdapter(this, ArrayListParameters);
         Collections.reverse(ArrayListParameters);
         theAdapter = new StopListArrayAdapter(this, ArrayListParameters);
-        ListView theListView = (ListView) findViewById(R.id.route_list);
+        ListView theListView = (ListView) findViewById(R.id.stop_list);
+        theListView.setTag(direction);
         theListView.setAdapter(theAdapter);
+    }*/
+    private void switch_directions() {
+        if (direction == 0) direction = 1;
+        else direction = 0;
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
+        if (direction == 1) {
+            route_id = dataBaseHelper.getRouteIntByTransportTypeAndNumRev(transport_type, route_num);
+        } else {
+            route_id = dataBaseHelper.getRouteIntByTransportTypeAndNum(transport_type, route_num);
+        }
+        Log.w("REVERSE ROUTE ID", route_id + "    ");
+
+        if (transport_type > 0 && transport_type < 4 && route_num > 0) {
+            ArrayListParameters.clear();
+            Cursor cursor = dataBaseHelper.getAllRouteStopsByRouteId(route_id);
+            if (cursor.moveToFirst()) {
+                do {
+
+                    String name = cursor.getString(cursor.getColumnIndex("name"));
+                    int id = cursor.getInt(cursor.getColumnIndex("_id"));
+                    double lat = cursor.getDouble(cursor.getColumnIndex("lat"));
+                    double lng = cursor.getDouble(cursor.getColumnIndex("lng"));
+                    Stop stop = new Stop(name, id, lat, lng);
+                    ArrayListParameters.add(stop);
+                    Log.w("STPO", "STOP");
+                } while (cursor.moveToNext());
+            }
+        }
+
+
+            /*editor = getSharedPreferences("RigaTransport", MODE_PRIVATE).edit();
+            editor.putInt("dir", direction);
+            editor.commit();*/
+
+
+        setContentView(R.layout.stop_list_layout);
+
+
+        ListAdapter theAdapter;
+        theAdapter = new StopListArrayAdapter(this, ArrayListParameters);
+        ListView theListView = (ListView) findViewById(R.id.stop_list);
+
+        theListView.setAdapter(theAdapter);
+        dataBaseHelper.close();
     }
+
 }
