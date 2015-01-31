@@ -45,9 +45,7 @@
         <activity
             android:name=".FavoritesActivity"
             android:label="RigaTransport"
-            android:theme="@style/Widget.AppCompat.Light.ActionBar">
-
-        </activity>
+            android:theme="@style/Widget.AppCompat.Light.ActionBar"></activity>
         <activity
             android:name=".RouteListActivity"
             android:label="RigaTransport"></activity>
@@ -58,9 +56,9 @@
             android:name=".StopListActivity"
             android:label="RigaTransport"></activity>
         <activity
-            android:name=".StopTimeTableActivity"
-            android:label="RigaTransport"
-            android:theme="@style/Widget.AppCompat.Light.ActionBar"></activity>
+            android:name=".TimeTableActivity"
+            android:label="RigaTransort"
+            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid"></activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

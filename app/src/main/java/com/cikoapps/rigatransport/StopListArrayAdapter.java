@@ -2,7 +2,6 @@ package com.cikoapps.rigatransport;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +12,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -74,9 +71,14 @@ public class StopListArrayAdapter extends ArrayAdapter<Stop> {
                 LinearLayout stopListLayout = (LinearLayout) theInflater.inflate(R.layout.stop_list_layout, parent, false);
                 ListView stopListView = (ListView) stopListLayout.findViewById(R.id.stop_list);
 
+                Intent intent = new Intent(getContext(), TimeTableActivity.class);
+                //Intent intent = new Intent(getContext(), TimeTableFragmentHolderActivity.class);
+                //Intent intent = new Intent(getContext(), StopTimeTableActivity.class);
 
-                Intent intent = new Intent(getContext(), StopTimeTableActivity.class);
                 intent.putExtra("stop_id", stop.getId());
+                intent.putExtra("route_id", stop.getRouteId());
+                Log.w("ROUTE ID MISSING", stop.getRouteId() + " ");
+
                 //intent.putExtra("direction",direction);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 getContext().startActivity(intent);

@@ -19,13 +19,9 @@ public class TabsPageAdapter extends FragmentStatePagerAdapter {
 
         switch (index) {
             case 0:
-                // Top Rated fragment activity
                 return new FavoriteStopsTab();
             case 1:
-                // Games fragment activity
                 return new FavoriteRoutesTab();
-            case 2:
-
         }
 
         return null;
@@ -33,10 +29,8 @@ public class TabsPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        // get item count - equal to number of tabs
         return 2;
     }
-
 
 
 }

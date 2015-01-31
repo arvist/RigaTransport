@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
@@ -245,14 +246,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         StringBuilder sb = new StringBuilder();
         String query = "Select * from routes where ";
         sb.append(query);
-        for(int i=0; i<ids.length; i++){
+        for (int i = 0; i < ids.length; i++) {
             sb.append("routes._id = " + ids[i] + " or ");
         }
         sb.trimToSize();
-        String temp = (sb.substring(0, sb.length() -3 )) + ";";
+        String temp = (sb.substring(0, sb.length() - 3)) + ";";
         sb.append(";");
         String selectAllQuery = sb.toString();
-        Cursor cursor = myDataBase.rawQuery(temp,null);
+        Cursor cursor = myDataBase.rawQuery(temp, null);
         return cursor;
 
     }
@@ -270,8 +271,66 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    // Add your public helper methods to access and get content from the database.
-    // You could return cursors by doing "return myDataBase.query(....)" so it'd be easy
-    // to you to create adapters for your views.
+    public Cursor getRouteStops(int id) {
+        openDataBase();
+        String query = " select stop._id, stop.name from stop where routeId = " + id + ";";
+        return myDataBase.rawQuery(query, null);
+    }
 
+    public int getRouteIdByStopId(int stopId) {
+        openDataBase();
+        String query = "select * from stop where stop._id = " + stopId + "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int routeId = -1;
+
+        if (cursor.moveToFirst()) {
+            do {
+                routeId = cursor.getInt(cursor.getColumnIndex("routeId"));
+            } while (cursor.moveToNext());
+
+        }
+        return routeId;
+    }
+
+    public int getDiffBetweenFirstAndPivotTime(int stopId, int timeId) {
+        openDataBase();
+        String query = "select * from timesWeekDays where timesWeekDays.stopid = " + stopId + "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int firstTimeId = -1;
+        if (cursor.moveToFirst()) {
+            firstTimeId = cursor.getInt(cursor.getColumnIndex("_id"));
+        }
+        return (timeId - firstTimeId);
+    }
+
+    public int getDiffBetweenFirstAndPivotTimeWeekend(int stopId, int timeId) {
+        openDataBase();
+        String query = "select * from timesWeekEnds where timesWeekEnds.stopid = " + stopId + "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int firstTimeId = -1;
+        if (cursor.moveToFirst()) {
+            firstTimeId = cursor.getInt(cursor.getColumnIndex("_id"));
+        }
+        return (timeId - firstTimeId);
+    }
+
+    public String getWeekDayTimeByStopIdAndPosition(int stopId, int position) {
+        String query = "select * from timesWeekDays where timesWeekDays.stopid = " + stopId + "";
+        String time = "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        if (cursor.moveToPosition(position)) {
+            time = cursor.getString(cursor.getColumnIndex("time"));
+        }
+        return time;
+    }
+
+    public String getWeekEndTimeByStopIdAndPosition(int stopId, int position) {
+        String query = "select * from timesWeekEnds where timesWeekEnds.stopid = " + stopId + "";
+        String time = "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        if (cursor.moveToPosition(position)) {
+            time = cursor.getString(cursor.getColumnIndex("time"));
+        }
+        return time;
+    }
 }

@@ -9,7 +9,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -26,20 +25,21 @@ import java.util.Calendar;
 public class WeekdayTimeTableTab extends Fragment {
     int tableRowCount = 0;
     int stopId = -1;
-    int direction = -1;
+    //int direction = -1;
     ArrayList<Time> times = new ArrayList<Time>();
 
     int nextA = 10000;
     int nextB = 10000;
     int nextC = 10000;
 
+
+    View selectedTimeView = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle stopBundle = getActivity().getIntent().getExtras();
         if (stopBundle != null) {
             stopId = stopBundle.getInt("stop_id");
-            direction = stopBundle.getInt("dir");
         }
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity().getApplicationContext());
         Cursor cursor = dataBaseHelper.getWeekDayTimesByStopId(stopId);
@@ -48,6 +48,7 @@ public class WeekdayTimeTableTab extends Fragment {
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 int id = cursor.getInt(cursor.getColumnIndex("_id"));
                 int stop_id = cursor.getInt(cursor.getColumnIndex("stopid"));
+
                 Time timeObj = new Time(id, time, stop_id);
 
                 Calendar calendar = Calendar.getInstance();
@@ -55,7 +56,6 @@ public class WeekdayTimeTableTab extends Fragment {
                 Calendar calendarNow = Calendar.getInstance();
                 timeObj.setDifference(getDiff(calendar, calendarNow));
                 times.add(timeObj);
-
 
                 if (getDiff(calendar, calendarNow) > 0) {
                     if (getDiff(calendar, calendarNow) < nextA) {
@@ -72,13 +72,8 @@ public class WeekdayTimeTableTab extends Fragment {
                         nextC = getDiff(calendar, calendarNow);
                     }
                 }
-
-
             } while (cursor.moveToNext());
-
-            Log.w("NEXT TRHEE DIFFS", nextA + " -> " + nextB + " -> " + nextC);
         }
-
 
     }
 
@@ -95,33 +90,67 @@ public class WeekdayTimeTableTab extends Fragment {
             int baseTime = times.get(i).getHourOfDay();
             TextView baseTimeTextView = new TextView(getActivity().getApplicationContext());
             baseTimeTextView.setText(baseTime + "");
-            baseTimeTextView.setPadding(10, 10, 10, 10);
+            baseTimeTextView.setPadding(15, 10, 15, 10);
             baseTimeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 26);
             row.addView(baseTimeTextView);
 
             while (i < (times.size())) {
                 if (times.get(i).getHourOfDay() == baseTime) {
-                    Log.w("CURR INDEX", i + " <-----");
 
+                    TextView minutesTextView = new TextView(getActivity().getApplicationContext());
+                    minutesTextView.setPadding(15, 10, 15, 10);
+                    minutesTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    String minutes = (times.get(i).getMinutesOfHour() + "").trim();
+                    if (minutes.length() < 2) minutes = 0 + minutes;
+                    minutesTextView.setText(minutes);
 
-                    TextView t = new TextView(getActivity().getApplicationContext());
+                    minutesTextView.setTag(times.get(i).getId() + "-" + times.get(i).getStopId());
+                    minutesTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (selectedTimeView != null) {
+                                selectedTimeView.setBackground(null);
+                            }
+                            selectedTimeView = v;
+                            selectedTimeView.setBackgroundColor(getResources().getColor(R.color.yellow_300));
 
-                    t.setPadding(10, 0, 10, 0);
-                    t.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                    t.setText(times.get(i).getMinutesOfHour() + "");
+                            String tag = v.getTag() + "";
+                            int timeId = Integer.parseInt(tag.split("-")[0]);
+                            int stopId = Integer.parseInt(tag.split("-")[1]);
+                            DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity().getApplicationContext());
+                            int routeId = dataBaseHelper.getRouteIdByStopId(stopId);
+                            dataBaseHelper.close();
+                            int position = dataBaseHelper.getDiffBetweenFirstAndPivotTime(stopId, timeId);
+                            dataBaseHelper.close();
+                            Cursor cursor = dataBaseHelper.getRouteStops(routeId);
+                            String[] drawerTimes = new String[cursor.getCount()];
+                            int i = 0;
+                            if (cursor.moveToFirst()) {
+                                do {
+                                    int currStopId = cursor.getInt(cursor.getColumnIndex("_id"));
+                                    String currStopName = cursor.getString(cursor.getColumnIndex("name"));
+                                    String time = dataBaseHelper.getWeekDayTimeByStopIdAndPosition(currStopId, position);
+                                    Log.w(currStopName, time);
+                                    drawerTimes[i] = currStopName + " " + time;
+                                    i++;
+                                } while (cursor.moveToNext());
+                            }
+                            TimeTableActivity.reloadDrawer(drawerTimes);
+                        }
+                    });
 
                     int currDay = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
                     if (currDay != Calendar.SATURDAY && currDay != Calendar.SUNDAY) {
                         if (times.get(i).getDifference() == nextA) {
-                            t.setBackgroundColor(getResources().getColor(R.color.yellow_700));
+                            minutesTextView.setBackgroundColor(getResources().getColor(R.color.yellow_700));
                         } else if (times.get(i).getDifference() == nextB) {
-                            t.setBackgroundColor(getResources().getColor(R.color.yellow_300));
+                            minutesTextView.setBackgroundColor(getResources().getColor(R.color.yellow_300));
                         } else if (times.get(i).getDifference() == nextC) {
-                            t.setBackgroundColor(getResources().getColor(R.color.yellow_50));
+                            minutesTextView.setBackgroundColor(getResources().getColor(R.color.yellow_50));
                         }
                     }
 
-                    row.addView(t);
+                    row.addView(minutesTextView);
                     i++;
                 } else break;
             }

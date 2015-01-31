@@ -2,11 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:gravity="center"
+    android:background="#5ba4e5"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/stop_time_table_text_view" />
-
+        android:textSize="40px"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:id="@+id/detail" />
 </LinearLayout>

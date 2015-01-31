@@ -14,6 +14,7 @@ public class Time {
     public Time(int id, String time, int stopId) {
         this.id = id;
         this.time = time.trim();
+        this.stopId = stopId;
         setHourOfDay();
         setMinutesOfHour();
     }

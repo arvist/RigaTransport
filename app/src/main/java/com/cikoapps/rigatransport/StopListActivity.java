@@ -59,7 +59,8 @@ public class StopListActivity extends ActionBarActivity {
                         int id = cursor.getInt(cursor.getColumnIndex("_id"));
                         double lat = cursor.getDouble(cursor.getColumnIndex("lat"));
                         double lng = cursor.getDouble(cursor.getColumnIndex("lng"));
-                        Stop stop = new Stop(name, id, lat, lng);
+                        Stop stop = new Stop(name, id, lat, lng, route_id);
+                        Log.w("ADDING ROUTE ID", route_id + "");
                         ArrayListParameters.add(stop);
                     } while (cursor.moveToNext());
                 }
@@ -194,7 +195,7 @@ public class StopListActivity extends ActionBarActivity {
                     int id = cursor.getInt(cursor.getColumnIndex("_id"));
                     double lat = cursor.getDouble(cursor.getColumnIndex("lat"));
                     double lng = cursor.getDouble(cursor.getColumnIndex("lng"));
-                    Stop stop = new Stop(name, id, lat, lng);
+                    Stop stop = new Stop(name, id, lat, lng, route_id);
                     ArrayListParameters.add(stop);
                     Log.w("STPO", "STOP");
                 } while (cursor.moveToNext());
