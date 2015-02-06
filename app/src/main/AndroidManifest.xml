@@ -29,36 +29,40 @@
 
         <activity
             android:name=".SplashScreenActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:noHistory="true" />
+
         <activity
             android:name=".CategoriesActivity"
-            android:label="RigaTransport"></activity>
+            android:label="RigaTransport" />
         <activity
             android:name=".FavoritesActivity"
             android:label="RigaTransport"
-            android:theme="@style/Widget.AppCompat.Light.ActionBar"></activity>
+            android:noHistory="true"
+            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid" />
         <activity
             android:name=".RouteListActivity"
-            android:label="RigaTransport"></activity>
+            android:label="RigaTransport" />
         <activity
             android:name=".Stop_Map_Activity"
             android:label="RigaTransport" />
         <activity
             android:name=".StopListActivity"
-            android:label="RigaTransport"></activity>
+            android:label="RigaTransport" />
         <activity
             android:name=".TimeTableActivity"
             android:label="RigaTransort"
-            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid"></activity>
+            android:theme="@style/Widget.AppCompat.Light.ActionBar.Solid" />
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

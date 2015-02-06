@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:riga_transp="http://schemas.android.com/apk/res-auto">>
+    xmlns:riga_transp="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/switch_dir"
         android:icon="@drawable/switch_icon"
-        android:title="Switch Directions"
+        android:title="@string/switch_directions_string"
         riga_transp:showAsAction="ifRoom" />
     <item
         android:id="@+id/favorite_route"
         android:icon="@drawable/favorites"
-        android:title="Favorite Route"
+        android:title="@string/favorite_route_string"
         riga_transp:showAsAction="ifRoom" />
 </menu>

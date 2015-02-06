@@ -5,14 +5,13 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Creation date 1/29/2015
  * -------------------------
- * Modified 2/1/2015 by Arvis code formmating
+ * Modified 2/1/2015 by Arvis code formating
  */
-public class UserDataBaseHelper extends SQLiteOpenHelper {
+class UserDataBaseHelper extends SQLiteOpenHelper {
 
     private static String DB_PATH = "/data/data/com.cikoapps.rigatransport/databases/";
 
@@ -52,7 +51,8 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
         boolean dbExist = checkDataBase();
         if (!dbExist) {
             this.getReadableDatabase();
-            myDataBase = myContext.openOrCreateDatabase(DB_NAME, myContext.MODE_PRIVATE, null);
+            //noinspection AccessStaticViaInstance
+            myDataBase = myContext.openOrCreateDatabase(DB_NAME, Context.MODE_PRIVATE, null);
 
             String createFavoriteRoutes = "CREATE TABLE `favorite_routes` (\n" +
                     "\t`_id`\tINTEGER,\n" +
@@ -66,27 +66,32 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                     "\tPRIMARY KEY(_id)\n" +
                     ");");
         }
+        close();
+    }
+
+    @Override
+    public synchronized void close() {
+        if (myDataBase != null)
+            myDataBase.close();
+        super.close();
     }
 
     /*
         Checks whether database where to store user favorite data is present
      */
-    protected boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-        String myPath = DB_PATH + DB_NAME;
+    boolean checkDataBase() {
         String[] databaseList = myContext.databaseList();
         boolean dbExists = false;
         for (String database : databaseList) {
             if (database.equalsIgnoreCase(DB_NAME)) dbExists = true;
         }
-        if (dbExists) return true;
-        else return false;
+        return dbExists;
     }
 
     /*
         Open database, it has to be closed manually
      */
-    public void openDataBase() throws SQLException {
+    void openDataBase() throws SQLException {
         String myPath = DB_PATH + DB_NAME;
         myDataBase = myContext.openOrCreateDatabase(myPath, SQLiteDatabase.OPEN_READONLY, null);
     }
@@ -105,12 +110,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     public void addFavoriteRoute(int routeId) {
         openDataBase();
         myDataBase.execSQL("insert into favorite_routes(route_id) values (" + routeId + ");");
-        Cursor cursor = myDataBase.rawQuery("Select * from favorite_routes;", null);
-        if (cursor.moveToFirst()) {
-            do {
-                int _id = cursor.getInt(cursor.getColumnIndex("route_id"));
-            } while (cursor.moveToNext());
-        }
+        close();
     }
 
     /*
@@ -119,12 +119,7 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     public void addFavoriteStop(int stopId) {
         openDataBase();
         myDataBase.execSQL("insert into favorite_stops (stop_id)  values (" + stopId + ");");
-        Cursor cursor = myDataBase.rawQuery("Select * from favorite_stops;", null);
-        if (cursor.moveToFirst()) {
-            do {
-                int _id = cursor.getInt(cursor.getColumnIndex("route_Id"));
-            } while (cursor.moveToNext());
-        }
+        close();
     }
 
     /*
@@ -133,11 +128,19 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     public boolean isFavoriteRoute(int routeId) {
         openDataBase();
         Cursor cursor = myDataBase.rawQuery("Select * from favorite_routes where route_id = " + routeId + ";", null);
-        if (cursor.moveToFirst()) {
-            return true;
-        }
-        return false;
+        boolean isFavorite = cursor.moveToFirst();
+        close();
+        return isFavorite;
     }
+
+    public boolean isFavoriteStop(int stopId) {
+        openDataBase();
+        Cursor cursor = myDataBase.rawQuery("Select * from favorite_stops where stop_id = " + stopId + ";", null);
+        boolean isFavorite = cursor.moveToFirst();
+        close();
+        return isFavorite;
+    }
+
 
     /*
         Removes route from favorites using route id
@@ -145,17 +148,24 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
     public void removeFavoriteRoute(int route_id) {
         openDataBase();
         myDataBase.execSQL("Delete from favorite_routes where route_id = " + route_id + ";");
+        close();
+    }
+
+    public void removeFavoriteStop(int stop_id) {
+        openDataBase();
+        myDataBase.execSQL("Delete from favorite_stops where stop_id = " + stop_id + ";");
+        close();
     }
 
     /*
         Returns array of int variables that represent route id's which user has favorited
      */
     public int[] getRouteFavoriteIds() {
+        int[] returnArray;
+        int position = 0;
         openDataBase();
-        int[] returnArray = null;
         Cursor cursor = myDataBase.rawQuery("Select * from favorite_routes", null);
         returnArray = new int[cursor.getCount()];
-        int position = 0;
         if (cursor.moveToFirst()) {
             do {
                 int _id = cursor.getInt(cursor.getColumnIndex("route_id"));
@@ -163,6 +173,24 @@ public class UserDataBaseHelper extends SQLiteOpenHelper {
                 position++;
             } while (cursor.moveToNext());
         }
+        close();
+        return returnArray;
+    }
+
+    public int[] getStopFavoriteIds() {
+        int[] returnArray;
+        int position = 0;
+        openDataBase();
+        Cursor cursor = myDataBase.rawQuery("Select * from favorite_stops", null);
+        returnArray = new int[cursor.getCount()];
+        if (cursor.moveToFirst()) {
+            do {
+                int _id = cursor.getInt(cursor.getColumnIndex("stop_id"));
+                returnArray[position] = _id;
+                position++;
+            } while (cursor.moveToNext());
+        }
+        close();
         return returnArray;
     }
 }

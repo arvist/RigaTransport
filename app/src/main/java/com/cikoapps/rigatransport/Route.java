@@ -1,16 +1,17 @@
 package com.cikoapps.rigatransport;
 
+
 /**
- * Created by arvis on 15.20.1.
+ * Creation date 1/25/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
-public class Route {
+class Route {
 
-
-    String name;
-    int number;
-    int id;
-    int type;
-
+    private String name;
+    private int number;
+    private int id;
+    private int type;
 
     public Route(String name, int number, int id, int type) {
         this.name = name;

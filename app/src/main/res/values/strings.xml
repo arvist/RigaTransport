@@ -8,6 +8,8 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+    <string name="switch_directions_string">Switch Directions</string>
+    <string name="favorite_route_string">Favorite Route</string>
 
 
 </resources>

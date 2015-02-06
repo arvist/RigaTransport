@@ -1,37 +1,31 @@
 package com.cikoapps.rigatransport;
 
-import android.app.ActionBar;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Layout;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewParent;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
+
 /**
- * Created by arvis on 15.20.1.
+ * Creation date 1/25/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
 public class RouteListActivity extends ActionBarActivity {
 
-    int transportType;
-    ArrayList<Route> ArrayListParameters = new ArrayList<Route>();
+    private int transportType;
+    private ArrayList<Route> ArrayListParameters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +34,20 @@ public class RouteListActivity extends ActionBarActivity {
         Bundle transportBundle = getIntent().getExtras();
         if (transportBundle != null) {
             transportType = transportBundle.getInt("transport_type");
+            setContentView(R.layout.route_list_layout);
+            new createRouteList().execute();
+        }
+    }
+
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        return super.onCreateView(name, context, attrs);
+    }
+
+    private class createRouteList extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
             DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
             if (transportType > 0 && transportType < 4) {
                 Cursor cursor = dataBaseHelper.getTransportListQuery(transportType);
@@ -53,9 +61,16 @@ public class RouteListActivity extends ActionBarActivity {
                         ArrayListParameters.add(route);
                     } while (cursor.moveToNext());
                 }
+                dataBaseHelper.close();
             }
-            setContentView(R.layout.route_list_layout);
-            ListAdapter theAdapter = new RouteListArrayAdapter(this, ArrayListParameters);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+            ListAdapter theAdapter = new RouteListArrayAdapter(getApplicationContext(), ArrayListParameters);
             final ListView theListView = (ListView) findViewById(R.id.route_list);
             theListView.setAdapter(theAdapter);
 
@@ -63,9 +78,6 @@ public class RouteListActivity extends ActionBarActivity {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
 
-                    Route o =(Route) theListView.getItemAtPosition(position);
-                    //prestationEco str=(prestationEco)o;//As you are using Default String Adapter
-                    Toast.makeText(getBaseContext(),o.getName(),Toast.LENGTH_SHORT).show();
                     int routeNum = Integer.parseInt((view.findViewById(R.id.route_map)).getTag().toString());
 
                     Intent intent = new Intent(RouteListActivity.this, StopListActivity.class);
@@ -75,56 +87,7 @@ public class RouteListActivity extends ActionBarActivity {
                     startActivity(intent);
                 }
             });
-
-            dataBaseHelper.close();
         }
     }
-
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
-    }
-
-   /* public void testMapClick(View view) {
-        Cursor cursor = null;
-        ArrayList<LatLng> flagArrayList = new ArrayList<LatLng>();
-        ArrayList<String> names = new ArrayList<String>();
-
-        int num = Integer.parseInt(view.getTag().toString());
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getApplicationContext());
-        int route_id = dataBaseHelper.getRouteIntByTransportTypeAndNum(transportType, num);
-        if (route_id != -1) {
-            cursor = dataBaseHelper.getAllRouteStopsPositionsByRouteId(route_id);
-            if (cursor.moveToFirst()) {
-                do {
-                    double lat = cursor.getDouble(cursor.getColumnIndex("lat"));
-                    double lng = cursor.getDouble(cursor.getColumnIndex("lng"));
-                    String name = cursor.getString(cursor.getColumnIndex("name"));
-                    LatLng latLng = new LatLng(lat, lng);
-
-                    flagArrayList.add(latLng);
-                    names.add(name);
-
-                } while (cursor.moveToNext());
-            }
-
-
-        }
-
-
-        Intent intent = new Intent(RouteListActivity.this, Stop_Map_Activity.class);
-        intent.putExtra("flagArrayList", flagArrayList);
-        intent.putExtra("names", names);
-        startActivity(intent);
-    }*/
-
-    /*public void onRouteClick(View view) {
-
-        int routeNum = Integer.parseInt((view.findViewById(R.id.google_maps)).getTag().toString());
-
-        Intent intent = new Intent(RouteListActivity.this, StopListActivity.class);
-        intent.putExtra("transport_type", transportType);
-        intent.putExtra("route_num", routeNum);
-        startActivity(intent);
-    }*/
 }
+

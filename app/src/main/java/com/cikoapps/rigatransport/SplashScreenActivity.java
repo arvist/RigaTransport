@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+
 /**
- * Created by arvis.taurenis on 1/27/2015.
+ * Creation date 1/27/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
 public class SplashScreenActivity extends Activity {
 
-    private static int SPLASH_SCREEN_TIME = 2000;
+    private final static int SPLASH_SCREEN_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

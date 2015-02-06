@@ -8,19 +8,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
+
 /**
- * Created by arvis.taurenis on 1/27/2015.
+ * Creation date 1/27/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
 public class Stop_Map_Activity extends ActionBarActivity {
 
-    static LatLng flagPosition = null;
-    static LatLng middleFlagPosition = null;
-    static String stopName = null;
+    private static LatLng flagPosition = null;
+    private static LatLng middleFlagPosition = null;
+    private static String stopName = null;
 
     private GoogleMap googleMap = null;
 
@@ -33,11 +35,16 @@ public class Stop_Map_Activity extends ActionBarActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
 
-            ArrayList<LatLng> flagArrayList = (ArrayList<LatLng>) bundle.get("flagArrayList");
-            ArrayList<String> names = (ArrayList<String>) bundle.get("names");
+            ArrayList<LatLng> flagArrayList;
+            flagArrayList = (ArrayList<LatLng>) bundle.get("flagArrayList");
+            ArrayList<String> names;
+            //noinspection unchecked
+            names = (ArrayList<String>) bundle.get("names");
 
 
-            //flagPosition = new LatLng(lat,lng);
+            /*
+            Focuses on middle stop on road
+             */
             middleFlagPosition = flagArrayList.get(flagArrayList.size() / 2);
 
             try {
@@ -48,20 +55,18 @@ public class Stop_Map_Activity extends ActionBarActivity {
 
                 googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-                //googleMap.setIndoorEnabled(true);
-                //googleMap.setBuildingsEnabled(true);
                 googleMap.getUiSettings().setZoomControlsEnabled(true);
 
                 for (int i = 0; i < flagArrayList.size(); i++) {
                     flagPosition = flagArrayList.get(i);
                     stopName = names.get(i);
-                    Marker marker = googleMap.addMarker(new MarkerOptions()
+                    googleMap.addMarker(new MarkerOptions()
                                     .position(flagPosition).title(stopName)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.dot))
                     );
                 }
 
-                // Move the camera instantly to location with a zoom of 15.
+                // Move the camera instantly to location with a zoom of 12.
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(middleFlagPosition, 12));
 
                 // Zoom in, animating the camera.

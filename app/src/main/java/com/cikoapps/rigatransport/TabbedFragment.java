@@ -1,8 +1,5 @@
 package com.cikoapps.rigatransport;
 
-/**
- * Created by arvis.taurenis on 1/31/2015.
- */
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,8 +15,8 @@ import java.util.Calendar;
 public class TabbedFragment extends Fragment {
 
     public static final String TAG = TabbedFragment.class.getSimpleName();
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
     public static TabbedFragment newInstance() {
         return new TabbedFragment();
@@ -34,13 +31,10 @@ public class TabbedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tabbed, container, false);
         mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
-
-
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         Calendar today = Calendar.getInstance();
-
-        if (today.DAY_OF_WEEK == Calendar.SATURDAY || today.DAY_OF_WEEK == Calendar.SUNDAY) {
+        if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
             mViewPager.setCurrentItem(1);
         } else {
             mViewPager.setCurrentItem(0);

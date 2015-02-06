@@ -4,36 +4,30 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Calendar;
 
-public class DataBaseHelper extends SQLiteOpenHelper {
+/**
+ * Creation date 1/19/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
+ */
+class DataBaseHelper extends SQLiteOpenHelper {
 
     //The Android's default system path of your application database.
     private static String DB_PATH = "/data/data/com.cikoapps.rigatransport/databases/";
 
     private static String DB_NAME = "transport";
 
-    private static String LOG_DB = "DATABASE.TRANSPORT";
-
     private SQLiteDatabase myDataBase;
 
     private final Context myContext;
 
-    /**
-     * Constructor
-     * Takes and keeps a reference of the passed context in order to access to the application assets and resources.
-     *
-     * @param context
-     */
+
     public DataBaseHelper(Context context) {
 
         super(context, DB_NAME, null, 1);
@@ -49,34 +43,28 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             if (cursor.getCount() < 100) {
                 try {
                     createDataBase();
-                    Log.d(LOG_DB, "Data missing from database");
                 } catch (IOException e) {
                     e.printStackTrace();
                     return false;
                 }
             }
-            Log.d(LOG_DB, "Database valid");
-        } else {
-            try {
-                Log.d(LOG_DB, "Database do not exist");
-                createDataBase();
+        } else try {
+            createDataBase();
 
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
-        //close();
+        close();
         return true;
     }
 
     /**
      * Creates a empty database on the system and rewrites it with your own database.
      */
-    public void createDataBase() throws IOException {
+    void createDataBase() throws IOException {
 
         boolean dbExist = checkDataBase();
-        Log.w("DATABASE", dbExist + " ");
         if (dbExist) {
             //do nothing - database already exist
         } else {
@@ -87,8 +75,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void ConstructNewFileFromResources() {
-        Log.w(LOG_DB, "Reading database");
+    void ConstructNewFileFromResources() {
         int ResourceList[] = new int[]{
                 R.raw.transport1,
                 R.raw.transport2,
@@ -97,10 +84,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 R.raw.transport5,
                 R.raw.transport6,
                 R.raw.transport7,
-                R.raw.transport8,
-                R.raw.transport9,
-                R.raw.transport10,
-                R.raw.transport11
+                R.raw.transport8
+
         };
         try {
             FileOutputStream Fos = new FileOutputStream(DB_PATH + DB_NAME);
@@ -114,12 +99,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 }
                 // Reading and writing the file Method 1 :
                 byte[] buffer = new byte[TotalLength];
-                int len = 0;
+               /* int len = 0;
                 try {
                     len = inputFile.read(buffer);
                 } catch (IOException e) {
                     Toast.makeText(myContext, "Error Reading File", Toast.LENGTH_SHORT).show();
-                }
+                }*/
                 Fos.write(buffer);
                 inputFile.close();
             }
@@ -127,7 +112,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         } catch (IOException e) {
             Toast.makeText(myContext, "IO Error Reading/writing File", Toast.LENGTH_SHORT).show();
         }
-        Log.d(LOG_DB, "Finished reading database");
     }
 
     /**
@@ -135,19 +119,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      *
      * @return true if it exists, false if it doesn't
      */
-    protected boolean checkDataBase() {
-        SQLiteDatabase checkDB = null;
-        String myPath = DB_PATH + DB_NAME;
+    boolean checkDataBase() {
         String[] databaseList = myContext.databaseList();
         boolean dbExists = false;
         for (String database : databaseList) {
             if (database.equalsIgnoreCase("transport")) dbExists = true;
         }
-        if (dbExists) return true;
-        else return false;
+        return dbExists;
     }
 
-    public void openDataBase() throws SQLException {
+    void openDataBase() throws SQLException {
         //Open the database
         String myPath = DB_PATH + DB_NAME;
         myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
@@ -177,16 +158,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             id = 3 Trolley
          */
         openDataBase();
-        Cursor cursor = myDataBase.rawQuery("Select * from routes where type = " + id + " and reverse = 'false';", null);
-        //close();
-        return cursor;
+        return myDataBase.rawQuery("Select * from routes where type = " + id + " and reverse = 'false';", null);
 
     }
 
     public Cursor getAllRouteStopsByRouteId(int route_id) {
         openDataBase();
-        Cursor cursor = myDataBase.rawQuery("select * from stop where stop.routeId = " + route_id + " order by stop._id", null);
-        return cursor;
+        return myDataBase.rawQuery("select * from stop where stop.route_id = " + route_id + " order by stop._id", null);
     }
 
     public Cursor getAllRouteStopsPositionsByRouteId(int route_id) {
@@ -195,9 +173,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             transport_type = 1 - Bus, 2 - Tram, 3 - Trolley
         */
         openDataBase();
-        Cursor cursor = myDataBase.rawQuery("Select stop.lat, stop.lng, stop.name, stop._id from stop where stop.routeId=" + route_id + " order by _id ASC;", null);
-        //close();
-        return cursor;
+        return myDataBase.rawQuery("Select stop.lat, stop.lng, stop.name, stop._id from stop where stop.route_id=" + route_id + " order by _id ASC;", null);
     }
 
     public int getRouteIntByTransportTypeAndNum(int transport_type, int num) {
@@ -210,6 +186,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 _id = cursor.getInt(cursor.getColumnIndex("_id"));
             } while (cursor.moveToNext());
         }
+        close();
         return _id;
     }
 
@@ -223,6 +200,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 _id = cursor.getInt(cursor.getColumnIndex("_id"));
             } while (cursor.moveToNext());
         }
+        close();
         return _id;
     }
 
@@ -237,6 +215,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 _id = cursor.getInt(cursor.getColumnIndex("_id"));
             } while (cursor.moveToNext());
         }
+        close();
         return _id;
     }
 
@@ -246,34 +225,53 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         StringBuilder sb = new StringBuilder();
         String query = "Select * from routes where ";
         sb.append(query);
-        for (int i = 0; i < ids.length; i++) {
-            sb.append("routes._id = " + ids[i] + " or ");
+        for (int id : ids) {
+            sb.append("routes._id = ").append(id).append(" or ");
         }
         sb.trimToSize();
         String temp = (sb.substring(0, sb.length() - 3)) + ";";
         sb.append(";");
-        String selectAllQuery = sb.toString();
-        Cursor cursor = myDataBase.rawQuery(temp, null);
-        return cursor;
+        return myDataBase.rawQuery(temp, null);
 
+    }
+
+    public Cursor getFavoriteStops(int[] ids) {
+        openDataBase();
+        StringBuilder sb = new StringBuilder();
+        String query = "Select * from stop where ";
+        sb.append(query);
+        for (int id : ids) {
+            sb.append("stop._id = ").append(id).append(" or ");
+        }
+        sb.trimToSize();
+        String temp = (sb.substring(0, sb.length() - 3)) + ";";
+        sb.append(";");
+        return myDataBase.rawQuery(temp, null);
     }
 
     public Cursor getWeekDayTimesByStopId(int id) {
         openDataBase();
-        String query = "select * from timesWeekDays where stopid = " + id + ";";
+        String query = "select * from timesWeekDays where stop_id = " + id + ";";
         return myDataBase.rawQuery(query, null);
     }
 
     public Cursor getWeekEndTimesByStopId(int id) {
         openDataBase();
-        String query = "select * from timesWeekEnds where stopid = " + id + ";";
+        String query = "select * from timesWeekEnds where stop_id = " + id + ";";
         return myDataBase.rawQuery(query, null);
 
     }
 
+
     public Cursor getRouteStops(int id) {
         openDataBase();
-        String query = " select stop._id, stop.name from stop where routeId = " + id + ";";
+        String query = " select stop._id, stop.name from stop where route_id = " + id + ";";
+        return myDataBase.rawQuery(query, null);
+    }
+
+    public Cursor getRouteStopsForward(int route_id, int stop_id) {
+        openDataBase();
+        String query = " select stop._id, stop.name from stop where route_id = " + route_id + "; "; //and _id > "+stop_id+";";
         return myDataBase.rawQuery(query, null);
     }
 
@@ -285,52 +283,109 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                routeId = cursor.getInt(cursor.getColumnIndex("routeId"));
+                routeId = cursor.getInt(cursor.getColumnIndex("route_id"));
             } while (cursor.moveToNext());
-
         }
+        close();
         return routeId;
     }
 
-    public int getDiffBetweenFirstAndPivotTime(int stopId, int timeId) {
+    public Cursor getWeekEndStandartTimeByStopAndPosition(int routeId) {
         openDataBase();
-        String query = "select * from timesWeekDays where timesWeekDays.stopid = " + stopId + "";
-        Cursor cursor = myDataBase.rawQuery(query, null);
-        int firstTimeId = -1;
-        if (cursor.moveToFirst()) {
-            firstTimeId = cursor.getInt(cursor.getColumnIndex("_id"));
-        }
-        return (timeId - firstTimeId);
+        String query = "select  timesWeekEnds.time, timesWeekEnds.stop_id , stop.name as \"stop_name\"\n" +
+                "from timesWeekEnds\n" +
+                "join stop on  timesWeekEnds.stop_id = stop._id \n" +
+                "join routes on  routes._id = stop.route_id \n" +
+                "where routes._id = " + routeId + " and  timesWeekEnds.standartTime like \"true\"";
+
+        return myDataBase.rawQuery(query, null);
+
     }
 
-    public int getDiffBetweenFirstAndPivotTimeWeekend(int stopId, int timeId) {
+    public Cursor getWeekEndNonStandartTimeByStopAndPosition(int routeId) {
         openDataBase();
-        String query = "select * from timesWeekEnds where timesWeekEnds.stopid = " + stopId + "";
+        String query = "select  timesWeekEnds.time, timesWeekEnds.stop_id , stop.name as \"stop_name\"\n" +
+                "from timesWeekEnds\n" +
+                "join stop on  timesWeekEnds.stop_id = stop._id \n" +
+                "join routes on  routes._id = stop.route_id \n" +
+                "where routes._id = " + routeId + " and  timesWeekEnds.standartTime like \"false\" ";
+        return myDataBase.rawQuery(query, null);
+    }
+
+    public Cursor getWeekDayNonStandartTimeByStopAndPosition(int routeId) {
+        openDataBase();
+        String query = "select  timesWeekDays.time, timesWeekDays.stop_id , stop.name as \"stop_name\"\n" +
+                "from timesWeekDays\n" +
+                "join stop on  timesWeekDays.stop_id = stop._id \n" +
+                "join routes on  routes._id = stop.route_id \n" +
+                "where routes._id = " + routeId + " and  timesWeekDays.standartTime like \"false\" ";
+        return myDataBase.rawQuery(query, null);
+    }
+
+    public Cursor getWeekDayStandartTimeByStopAndPosition(int routeId) {
+        openDataBase();
+        String query = "select  timesWeekDays.time, timesWeekDays.stop_id , stop.name as \"stop_name\"\n" +
+                "from timesWeekDays\n" +
+                "join stop on  timesWeekDays.stop_id = stop._id \n" +
+                "join routes on  routes._id = stop.route_id \n" +
+                "where routes._id = " + routeId + " and  timesWeekDays.standartTime like \"true\" ";
+        return myDataBase.rawQuery(query, null);
+    }
+
+    public int getStandartTimeNumWeekDay(int timeId, int stopId) {
+
+        openDataBase();
+        String query = "select * from timesWeekDays where stop_id = " + stopId + " and standartTime like \"true\" and _id < " + timeId + "";
         Cursor cursor = myDataBase.rawQuery(query, null);
-        int firstTimeId = -1;
+        int count = cursor.getCount();
+        close();
+        return count;
+
+    }
+
+    public int getStandartTimeNumWeekend(int timeId, int stopId) {
+        openDataBase();
+        String query = "select * from timesWeekEnds where stop_id = " + stopId + " and standartTime like \"true\" and _id < " + timeId + "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int count = cursor.getCount();
+        close();
+        return count;
+    }
+
+    public int getNonStandartTimeNumWeekDay(int timeId, int stopId) {
+        openDataBase();
+        String query = "select * from timesWeekDays where stop_id = " + stopId + " and standartTime like \"false\" and _id < " + timeId + ";";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int count = cursor.getCount();
+        close();
+        return count;
+    }
+
+    public int getNonStandartTimeNumWeekEnd(int timeId, int stopId) {
+        openDataBase();
+        String query = "select * from timesWeekEnds where stop_id = " + stopId + " and standartTime like \"false\" and _id < " + timeId + "";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int count = cursor.getCount();
+        close();
+        return count;
+    }
+
+    public int[] getRouteIntAndTypeByRouteId(int rotueId) {
+        openDataBase();
+        String query = "select * from routes where _id = " + rotueId + ";";
+        Cursor cursor = myDataBase.rawQuery(query, null);
+        int type = -1;
+        int number = -1;
         if (cursor.moveToFirst()) {
-            firstTimeId = cursor.getInt(cursor.getColumnIndex("_id"));
+            do {
+                type = cursor.getInt(cursor.getColumnIndex("type"));
+                number = cursor.getInt(cursor.getColumnIndex("number"));
+            } while (cursor.moveToNext());
         }
-        return (timeId - firstTimeId);
+        close();
+        int[] rotueInfo = {type, number};
+        return rotueInfo;
     }
 
-    public String getWeekDayTimeByStopIdAndPosition(int stopId, int position) {
-        String query = "select * from timesWeekDays where timesWeekDays.stopid = " + stopId + "";
-        String time = "";
-        Cursor cursor = myDataBase.rawQuery(query, null);
-        if (cursor.moveToPosition(position)) {
-            time = cursor.getString(cursor.getColumnIndex("time"));
-        }
-        return time;
-    }
 
-    public String getWeekEndTimeByStopIdAndPosition(int stopId, int position) {
-        String query = "select * from timesWeekEnds where timesWeekEnds.stopid = " + stopId + "";
-        String time = "";
-        Cursor cursor = myDataBase.rawQuery(query, null);
-        if (cursor.moveToPosition(position)) {
-            time = cursor.getString(cursor.getColumnIndex("time"));
-        }
-        return time;
-    }
 }

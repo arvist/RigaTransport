@@ -1,20 +1,25 @@
 package com.cikoapps.rigatransport;
 
 /**
- * Created by arvis.taurenis on 1/30/2015.
+ * Creation date 1/30/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
-public class Time {
-    int id;
-    String time;
-    int stopId;
-    int hourOfDay;
-    int minutesOfHour;
-    int difference;
 
-    public Time(int id, String time, int stopId) {
+class Time {
+    private int id;
+    private String time;
+    private boolean isStandart;
+    private int stopId;
+    private int hourOfDay;
+    private int minutesOfHour;
+    private int difference;
+
+    public Time(int id, String time, int stopId, boolean isStandart) {
         this.id = id;
         this.time = time.trim();
         this.stopId = stopId;
+        this.isStandart = isStandart;
         setHourOfDay();
         setMinutesOfHour();
     }
@@ -31,6 +36,13 @@ public class Time {
         return stopId;
     }
 
+    public boolean getIsStandart() {
+        return this.isStandart;
+    }
+
+    public void setIsStandart(boolean s) {
+        this.isStandart = s;
+    }
 
     public void setHourOfDay() {
         String hour = time.substring(0, time.length() - 3);

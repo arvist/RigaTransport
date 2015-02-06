@@ -1,24 +1,18 @@
 package com.cikoapps.rigatransport;
 
 import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.ListView;
 
+
 /**
- * Created by arvis.taurenis on 1/21/2015.
+ * Creation date 1/21/2015
+ * -------------------------
+ * Modified 2/1/2015 by Arvis code formatting
  */
 @SuppressWarnings("ALL")
 public class FavoritesActivity extends FragmentActivity implements

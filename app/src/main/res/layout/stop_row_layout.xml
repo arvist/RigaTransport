@@ -17,8 +17,7 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_weight="6"
-        android:textSize="16dp"
-        android:elegantTextHeight="true"
+        android:textSize="16sp"
         android:paddingLeft="8dp"
         android:gravity="center_vertical|center_horizontal"
         android:id="@+id/stop_name" />
@@ -30,6 +29,7 @@
         android:padding="4dp"
         android:gravity="center_vertical|center_horizontal"
         android:id="@+id/stop_map_image"
-        android:onClick="onStopMapClick"/>
+
+        android:onClick="onStopMapClick" />
 
 </LinearLayout>
