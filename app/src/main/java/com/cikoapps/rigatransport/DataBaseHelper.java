@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.io.FileOutputStream;
@@ -99,12 +100,12 @@ class DataBaseHelper extends SQLiteOpenHelper {
                 }
                 // Reading and writing the file Method 1 :
                 byte[] buffer = new byte[TotalLength];
-               /* int len = 0;
+                int len = 0;
                 try {
                     len = inputFile.read(buffer);
                 } catch (IOException e) {
                     Toast.makeText(myContext, "Error Reading File", Toast.LENGTH_SHORT).show();
-                }*/
+                }
                 Fos.write(buffer);
                 inputFile.close();
             }
@@ -123,8 +124,11 @@ class DataBaseHelper extends SQLiteOpenHelper {
         String[] databaseList = myContext.databaseList();
         boolean dbExists = false;
         for (String database : databaseList) {
+            Log.e("TRANSPORT ", database);
             if (database.equalsIgnoreCase("transport")) dbExists = true;
+
         }
+        Log.e("DATABASE", dbExists + " ");
         return dbExists;
     }
 
